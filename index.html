@@ -13,7 +13,6 @@
     padding: 0;
   }
 
-  /* ===== Login Screen ===== */
   .login-screen {
     height: 100vh;
     display: flex;
@@ -28,10 +27,7 @@
     box-shadow: 0 3px 8px rgba(0,0,0,0.4);
     text-align: center;
   }
-  .login-box h2 {
-    color: #fff;
-    margin-bottom: 20px;
-  }
+  .login-box h2 { color: #fff; margin-bottom: 20px; }
   input[type=password] {
     width: 100%;
     padding: 10px;
@@ -49,24 +45,11 @@
     padding: 10px 15px;
     cursor: pointer;
   }
-  button:hover {
-    background: #0056b3;
-  }
-  #error {
-    color: #ff4d4d;
-    margin-top: 10px;
-  }
+  button:hover { background: #0056b3; }
+  #error { color: #ff4d4d; margin-top: 10px; }
 
-  /* ===== Main Content ===== */
-  #main-content {
-    display: none;
-    padding: 20px;
-  }
-
-  h1 {
-    text-align: center;
-    color: #fff;
-  }
+  #main-content { display: none; padding: 20px; }
+  h1 { text-align: center; color: #fff; }
 
   .question-box {
     background: #1e1e1e;
@@ -79,10 +62,7 @@
     transition: background 0.2s;
     cursor: pointer;
   }
-
-  .question-box:hover {
-    background: #242424;
-  }
+  .question-box:hover { background: #242424; }
 
   .question {
     font-weight: bold;
@@ -115,10 +95,7 @@
     font-size: 0.9em;
     cursor: pointer;
   }
-
-  .copy-btn:hover {
-    background: #0056b3;
-  }
+  .copy-btn:hover { background: #0056b3; }
 
   .copied-popup {
     position: fixed;
@@ -133,10 +110,7 @@
     font-size: 0.9em;
     z-index: 1000;
   }
-
-  .copied-popup.show {
-    opacity: 1;
-  }
+  .copied-popup.show { opacity: 1; }
 </style>
 
 <script>
@@ -145,7 +119,6 @@ function checkPassword() {
   const login = document.getElementById('login');
   const main = document.getElementById('main-content');
   const error = document.getElementById('error');
-
   if (password === 'kyedae') {
     login.style.display = 'none';
     main.style.display = 'block';
@@ -165,7 +138,6 @@ function copyCode(id) {
     .filter(n => n.nodeType === Node.TEXT_NODE || n.nodeName === "PRE")
     .map(n => n.textContent)
     .join("");
-
   navigator.clipboard.writeText(code.trim()).then(() => showPopup());
 }
 
@@ -207,12 +179,10 @@ def heapify(arr, n, i):
     largest = i
     left = 2 * i + 1
     right = 2 * i + 2
-
     if left < n and arr[left] > arr[largest]:
         largest = left
     if right < n and arr[right] > arr[largest]:
         largest = right
-
     if largest != i:
         arr[i], arr[largest] = arr[largest], arr[i]
         heapify(arr, n, largest)
@@ -316,19 +286,39 @@ print("Maximum Profit:", total_profit)
       <div class="question">Q4. Naive String Matching Algorithm</div>
       <div class="answer" id="ans4">
         <button class="copy-btn" onclick="event.stopPropagation(); copyCode('ans4')">Copy Code</button>
-text = "AABAACAADAABAABA"
-pattern = "AABA"
-n = len(text)
-m = len(pattern)
+def naive_string_match(text, pattern):
+    n = len(text)
+    m = len(pattern)
+    positions = []
+    if m == 0:
+        print("Empty pattern! Matches at all positions.")
+        return list(range(n + 1))
+    if m > n:
+        return []
+    for i in range(n - m + 1):
+        match = True
+        for j in range(m):
+            if text[i + j] != pattern[j]:
+                match = False
+                break
+        if match:
+            positions.append(i)
+    return positions
 
-for i in range(n - m + 1):
-    match = True
-    for j in range(m):
-        if text[i + j] != pattern[j]:
-            match = False
-            break
-    if match:
-        print("Pattern found at index", i)
+def main():
+    print("=== Naive String Matching Algorithm ===")
+    text = input("Enter the text: ")
+    pattern = input("Enter the pattern: ")
+    result = naive_string_match(text, pattern)
+    if result:
+        print(f"Pattern found at indices: {result}")
+        for idx in result:
+            print(f"text[{idx}:{idx+len(pattern)}] = '{text[idx:idx+len(pattern)]}'")
+    else:
+        print("Pattern not found in the text.")
+
+if __name__ == "__main__":
+    main()
       </div>
     </div>
 
@@ -341,15 +331,16 @@ from collections import deque
 
 def bfs(maze, start, goal):
     queue = deque([start])
-    visited = set()
+    visited = set([start])
     parent = {start: None}
     while queue:
         node = queue.popleft()
         if node == goal:
             break
+        x, y = node
         for dx, dy in [(1,0),(-1,0),(0,1),(0,-1)]:
-            nxt = (node[0] + dx, node[1] + dy)
-            if nxt not in visited and nxt in maze:
+            nxt = (x + dx, y + dy)
+            if nxt in maze and nxt not in visited:
                 visited.add(nxt)
                 queue.append(nxt)
                 parent[nxt] = node
@@ -357,8 +348,17 @@ def bfs(maze, start, goal):
     step = goal
     while step:
         path.append(step)
-        step = parent[step]
-    return path[::-1]
+        step = parent.get(step)
+    return path[::-1] if path else []
+
+maze = {(0,0),(0,1),(1,0),(1,1),(1,2),(2,2)}
+start = (0,0)
+goal = (2,2)
+path = bfs(maze, start, goal)
+if path:
+    print("Path found:", path)
+else:
+    print("No path found.")
       </div>
     </div>
   </div>
